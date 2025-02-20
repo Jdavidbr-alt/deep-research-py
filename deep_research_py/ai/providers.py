@@ -120,9 +120,16 @@ def trim_prompt(
 
 async def generate_completions(client, model, messages, format):
     valid_formats = {"json_object", "json_schema", "text"}
+    
+    # Ensure format is a string, not a dictionary
+    if isinstance(format, dict):
+        print(f"⚠️ Received dictionary as format. Defaulting to 'json_object'.")
+        format = "json_object"
+
     if format not in valid_formats:
         print(f"⚠️ Invalid response_format '{format}', defaulting to 'json_object'")
-        format = "json_object" 
+        format = "json_object"
+        
     if get_service() == "ollama":
         response = await asyncio.get_event_loop().run_in_executor(
             None,
